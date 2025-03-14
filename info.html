@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A - A Romantic Journey</title>
+    <style>
+        body {
+            font-family: 'Cursive', sans-serif;
+            background: linear-gradient(to right, #ffafbd, #ffc3a0);
+            color: #333;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height for scrollbar */
+            overflow-y: auto; /* Enable vertical scrollbar */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-top: 20px;
+            color: #e63946;
+        }
+
+        .pin-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .pin-input {
+            font-size: 1.5em;
+            padding: 10px;
+            width: 100px;
+            border: 2px solid #e63946;
+            border-radius: 5px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .pin-input:focus {
+            border-color: #ffb703;
+            outline: none;
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background: #ffb703;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background: #fb8500;
+        }
+
+        .blurred {
+            filter: blur(5px);
+            transition: filter 0.5s;
+        }
+
+        .content {
+            display: none;
+            margin: 20px auto;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            border: 2px solid #e63946;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border: 1px solid #e63946;
+            margin: 0 10px;
+        }
+
+        .heart {
+            font-size: 1.5em;
+            color: #e63946;
+        }
+
+        .basic-info {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .info-card {
+            border: 2px solid #e63946;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            flex: 1 1 200px;
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .address-link {
+            cursor: pointer;
+            color: #ffb703;
+            font-size: 1.2em;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+
+        .address-link:hover {
+            color: #fb8500;
+        }
+
+        .story-section {
+            border: 2px solid #e63946;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .slideshow {
+            position: relative;
+            margin: 20px auto;
+            overflow: hidden;
+            height: 150px; /* Fixed height for slideshow */
+        }
+
+        .story-slide {
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        /* Slideshow styles */
+        .story-slide.active {
+            display: block; /* Show active slide */
+        }
+
+        .navigation-buttons {
+            margin-top: 10px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #ffb703;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin: 0 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #fb8500;
+        }
+
+        .message {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #e63946;
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .pin-input {
+                width: 80%;
+            }
+
+            .submit-button {
+                width: 80%;
+            }
+
+            .basic-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .info-card {
+                flex: 1 1 90%; /* Full width on mobile */
+                margin: 10px 0;
+            }
+
+            .story-slide {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Dev & Riya – A Love Story Written in the Stars ✨</h1>
+    <div class="pin-container">
+        <h2>Please Enter Your PIN:</h2>
+        <input type="text" id="pinInput" class="pin-input" maxlength="3" placeholder="Enter PIN">
+        <button class="submit-button" onclick="checkPin()">Submit</button>
+    </div>
+
+    <div class="story-section" id="storySection">
+        <h3>Our Story in 1 Min</h3>
+        <div class="slideshow">
+            <div class="story-slide active">
+                <p>1. It all began on March 18, 2024, when we first talked—a small start that became something special.</p>
+                <p>2. Just five days later, on March 23, we made each other ours, turning our bond into something unbreakable.</p>
+            </div>
+            <div class="story-slide">
+                <p>3. Endless laughter, late-night chats, and sweet moments made every day feel like a dream.</p>
+                <p>4. Her cute anger and my playful teasing became the perfect mix of love and fun.</p>
+            </div>
+            <div class="story-slide">
+                <p>5. On her birthday, I gave her a necklace—not just a gift, but a memory to cherish forever.</p>
+                <p>6. Then, life tested us—the civil war separated us for exactly 39 days, 21 hours, and 12 minutes.</p>
+            </div>
+            <div class="story-slide">
+                <p>7. But the moment her message popped up, my world felt whole again.</p>
+                <p>8. No matter the distance, our love remains unshaken and stronger than ever.</p>
+            </div>
+            <div class="story-slide">
+                <p>9. We are not just a story; we are proof that true love endures everything.</p>
+                <p>10. Today, tomorrow, and forever—Dev & Riya, always together.</p>
+            </div>
+        </div>
+        <div class="navigation-buttons">
+            <button class="nav-button" onclick="showPreviousSlide()">❮ Previous</button>
+            <button class="nav-button" onclick="showNextSlide()">Next ❯</button>
+        </div>
+        <div class="message" id="message">Curious huh? ╰(*°▽°*)╯</div>
+    </div>
+
+    <div class="content" id="content">
+        <div class="section">
+            <h2>Basic Info about Us</h2>
+            <div class="divider">
+                <span class="heart">❤️</span>
+            </div>
+            <div class="basic-info">
+                <div class="info-card">
+                    <img src="info/devinfo.jpg" alt="Dev's Image">
+                    <h3>Dev</h3>
+                    <p><strong>Name:</strong> Dev</p>
+                    <p><strong>Age:</strong> 20 (Born 20th Nov 2004)</p>
+                    <p><strong>Zodiac Sign:</strong> Scorpio</p>
+                    <p>
+                        <strong>Address:</strong> 30th street Merchant Road, Yangon 
+                        <span class="address-link" onclick="window.open('https://maps.app.goo.gl/Ac2LTYJNG2Tx9AhF8', '_blank')">📍</span>
+                    </p>
+                </div>
+                <div class="info-card">
+                    <img src="info/riyainfo.jpg" alt="Riya's Image">
+                    <h3>Riya</h3>
+                    <p><strong>Name:</strong> Riya</p>
+                    <p><strong>Age:</strong> 16 (Born 9th June 2008)</p>
+                    <p><strong>Zodiac Sign:</strong> Gemini</p>
+                    <p>
+                        <strong>Address:</strong> 5th quarter yaykan street, 37th street 
+                        <span class="address-link" onclick="window.open('https://maps.apple.com/?ll=22.928846,97.747429&q=Dropped%20Pin&t=m', '_blank')">📍</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Riya's Magic</title>
+            <link rel="stylesheet" href="styles.css"> <!-- Linking CSS -->
+        </head>
+        <body>
+            <div class="magic-border">
+                <h2>Riya's Magic</h2>
+                <div class="slideshow-container">
+                    <img class="slides" src="info/photo_1_2025-03-14_09-01-30.jpg" alt="Love Moment 1">
+                    <img class="slides" src="info/photo_2_2025-03-14_09-01-30.jpg" alt="Love Moment 2">
+                    <img class="slides" src="info/photo_3_2025-03-14_09-01-30.jpg" alt="Love Moment 3">
+                    <img class="slides" src="info/photo_4_2025-03-14_09-01-30.jpg" alt="Love Moment 4">
+                    <img class="slides" src="info/photo_5_2025-03-14_09-01-30.jpg" alt="Love Moment 5">
+                    <img class="slides" src="info/photo_6_2025-03-14_09-01-30.jpg" alt="Love Moment 6">
+                    <img class="slides" src="info/photo_7_2025-03-14_09-01-30.jpg" alt="Love Moment 7">
+                    <img class="slides" src="info/photo_8_2025-03-14_09-01-30.jpg" alt="Love Moment 8">
+                    <img class="slides" src="info/photo_9_2025-03-14_09-01-30.jpg" alt="Love Moment 9">
+                    <img class="slides" src="info/photo_10_2025-03-14_09-01-30.jpg" alt="Love Moment 10">
+                    <img class="slides" src="info/photo_11_2025-03-14_09-01-30.jpg" alt="Love Moment 11">
+                    <img class="slides" src="info/photo_12_2025-03-14_09-01-30.jpg" alt="Love Moment 12">
+                </div>
+            </div>
+        
+            <script src="script.js"></script> <!-- Linking JavaScript -->
+        </body>
+        </html>
+        
+
+        <button id="playMusic" class="submit-button" onclick="toggleMusic()">Play/Pause Music</button>
+        <audio id="bgMusic" src="romanticmode/#Co2 Song by Prateek Kuhad🎹🎶🎵💽😊 #music #songs #videoediting #prateekkuhad [QQRfTY_AUJI].mp3" loop></audio>
+    </div>
+
+    <script>
+        const correctPin = "116";
+        let storySlideIndex = 0;
+
+        function checkPin() {
+            const pinInput = document.getElementById('pinInput').value;
+            if (pinInput === correctPin) {
+                document.querySelector('.pin-container').style.display = 'none';
+                document.getElementById('storySection').style.display = 'none'; // Hide the story section after entering the PIN
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('content').classList.remove('blurred');
+                document.getElementById('bgMusic').play();
+                displayLoveMessages();
+                showSlide(storySlideIndex); // Show the first slide
+            } else {
+                alert('Incorrect PIN. Please try again.');
+            }
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+       
+    </script>
+</body>
+</html>

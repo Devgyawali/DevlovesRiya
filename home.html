@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev & Riya - Forever ❤️</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #ffecf0; /* Soft pastel background */
+            color: #ff4d9d; /* Attractive pink color */
+            padding: 0; /* No padding to allow for full coverage */
+            margin: 0; /* No margin to allow for full coverage */
+            overflow-y: scroll; /* Allow scrolling */
+            height: 100vh;
+            position: relative; /* For positioning of absolute elements */
+        }
+        .header {
+            background-color: #ff80ab; /* Header color */
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2; /* Ensure header stays above GIFs */
+        }
+        .header h1 {
+            margin: 0;
+            color: white;
+            font-size: 2rem; /* Responsive font size */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            max-width: 90%; /* Ensure container is responsive */
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
+            padding: 20px; /* Reduced padding for mobile */
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px #ff80ab;
+            position: relative;
+            z-index: 3; /* Ensure container stays above GIFs */
+        }
+        h2 {
+            font-size: 1.5rem; /* Responsive font size */
+            margin-bottom: 20px;
+            color: #d81b60; /* Deep pink */
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        .timer {
+            font-size: 1.5rem; /* Responsive font size */
+            font-weight: bold;
+            color: #d81b60;
+            background: #ffe6f2;
+            padding: 12px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Spacing between links */
+            flex-wrap: wrap;
+        }
+        nav a {
+            text-decoration: none;
+            color: white;
+            margin: 12px;
+            font-size: 1rem; /* Responsive font size */
+            font-weight: bold;
+            transition: transform 0.3s ease, background 0.3s ease;
+            padding: 10px 15px; /* Adjusted padding for mobile */
+            border-radius: 8px;
+            background: #ff4081; /* Attractive pink for links */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        nav a:hover {
+            transform: scale(1.1);
+            background: #ff69b4; /* Lighter pink on hover */
+            color: white;
+        }
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            height: auto; /* Allow height to adjust based on image */
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px #ff80ab;
+        }
+        .slide {
+            display: none;
+            width: 100%;
+            height: auto; /* Ensure responsive height */
+        }
+        .slide img {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Custom Scrollbar Style */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #ff4081;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #d81b60;
+        }
+
+        /* Positioning Love GIFs randomly */
+        .gif-section {
+            position: fixed; /* Fix to cover entire viewport */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1; /* Behind content */
+            overflow: hidden; /* Hide overflow */
+        }
+
+        .gif {
+            position: absolute;
+            width: 150px; /* Adjusted size for better mobile experience */
+            height: 150px; /* Adjusted size for better mobile experience */
+            opacity: 0.8;
+            animation: float 5s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(255, 64, 129, 0.8)); /* Glow effect */
+        }
+
+        /* Animation for floating effect */
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Adjust position for the GIFs */
+        .gif1 { top: 5%; left: 5%; }
+        .gif2 { top: 5%; right: 5%; }
+        .gif3 { bottom: 5%; left: 5%; }
+        .gif4 { bottom: 5%; right: 5%; }
+        .gif5 { top: 40%; left: 50%; transform: translateX(-50%); }
+
+        /* Add style for popup text */
+        .popup-text {
+            position: absolute;
+            font-size: 1rem; /* Responsive font size */
+            color: #ff4081;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeInPopup 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeInPopup {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dev & Riya ❤️😘</h1>
+    </div>
+
+    <div class="container">
+        <h2>A love that grows stronger every day, bound by memories, dreams, and an unbreakable forever together❣️</h2>
+        <p>We have been together for:</p>
+        <div class="timer" id="timeTogether"></div>
+        <div class="slideshow-container">
+            <div class="slide"><img src="pics/us1.jpg" alt="Dev & Riya 1"></div>
+            <div class="slide"><img src="pics/dev1.jpg" alt="Dev & Riya 4"></div>
+            <div class="slide"><img src="pics/riya2.jpg" alt="Dev & Riya 5"></div>
+        </div>
+        <nav>
+            <a href="info.html">Our Info</a>
+            <a href="characterselection.html">Games</a>
+        </nav>
+    </div>
+
+    <!-- Love GIF Section -->
+    <div class="gif-section">
+        <video class="gif gif1" autoplay loop muted>
+            <source src="gifs/gif1.webm" type="video/webm">
+        </video>
+        <video class="gif gif2" autoplay loop muted>
+            <source src="gifs/gif2.webm" type="video/webm">
+        </video>
+        <video class="gif gif3" autoplay loop muted>
+            <source src="gifs/gif3.webm" type="video/webm">
+        </video>
+        <video class="gif gif4" autoplay loop muted>
+            <source src="gifs/gif4.webm" type="video/webm">
+        </video>
+        <video class="gif gif5" autoplay loop muted>
+            <source src="gifs/kissie.webm" type="video/webm">
+        </video>
+    </div>
+
+    <audio id="loveAudio" src="audio/Pikachu Notification Sound Download - MobCup.Com.Co.mp3" preload="auto"></audio>
+
+    <script>
+        function updateTimer() {
+            const startDate = new Date('2024-03-23T00:00:00');
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('timeTogether').innerText = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+        
+        let slideIndex = 0;
+        function showSlides() {
+            let slides = document.getElementsByClassName("slide");
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1; }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 3000); // Change slide every 3 seconds
+        }
+        showSlides();
+
+        document.body.addEventListener("click", function(event) {
+            // Create the heart emoji and text popup
+            const heart = document.createElement("div");
+            const text = document.createElement("div");
+            
+            text.textContent = "Dev❣️Riya";
+            heart.style.position = "absolute";
+            text.style.position = "absolute";
+            heart.style.fontSize = "30px";
+            text.style.fontSize = "20px";
+            heart.style.top = `${event.clientY - 20}px`;
+            heart.style.left = `${event.clientX - 20}px`;
+            text.style.top = `${event.clientY + 20}px`;
+            text.style.left = `${event.clientX - 50}px`;
+
+            // Style the heart and text popup
+            document.body.appendChild(heart);
+            document.body.appendChild(text);
+            heart.style.transition = "transform 0.8s ease-out, opacity 0.5s ease";
+            text.style.transition = "opacity 0.5s ease";
+            text.classList.add("popup-text");
+
+            // Trigger the heart's animation
+            heart.style.transform = "scale(2)";
+            text.style.opacity = "1";
+            
+            // Play the "I love you" sound
+            const loveAudio = document.getElementById("loveAudio");
+            loveAudio.play();
+
+            // Remove the heart and text after animation
+            setTimeout(() => {
+                heart.remove();
+                text.remove();
+            }, 1200);
+        });
+    </script>
+</body>
+</html>

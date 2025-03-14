@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Lobby of Riya</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #222, #ff1493);
+            background-size: 200% 200%;
+            animation: backgroundAnimation 10s ease infinite;
+            margin: 0;
+            overflow-x: hidden; /* Hide horizontal overflow */
+            color: #fff;
+            text-align: center;
+            cursor: url('https://cur.cursors-4u.net/games/gam-4/gam321.cur'), auto;
+            height: 100vh; /* Full viewport height for scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        h1 {
+            font-size: 2.5em; /* Adjusted for mobile */
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            animation: glow 1.5s ease infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px #ff1493; }
+            100% { text-shadow: 0 0 30px #ff7eb3; }
+        }
+
+        .romantic-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #ff1493;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .game-container {
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            width: 90%; /* Adjusted for mobile */
+            max-width: 600px;
+        }
+
+        .game-logo {
+            width: 100%;
+            max-width: 250px; /* Adjusted for mobile */
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .game-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-box {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 90%; /* Adjusted for mobile */
+            max-width: 300px; /* Maximum width */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .chat-input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .chat-input-container button {
+            padding: 5px 10px;
+            background-color: #ff1493;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .chat-input-container button:hover {
+            background-color: #ff69b4;
+        }
+
+        .upcoming-games {
+            margin: 20px auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            width: 90%; /* Adjusted for mobile */
+            max-width: 600px;
+            color: #ffeb3b;
+        }
+
+        .contact {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 1.2em;
+        }
+
+        .contact a {
+            color: #ffeb3b;
+            text-decoration: none;
+        }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+        /* Heart animation */
+        .heart {
+            position: absolute;
+            width: 30px; /* Adjusted size for mobile */
+            height: 30px; /* Adjusted size for mobile */
+            background: url('https://cdn.pixabay.com/photo/2013/07/12/15/23/heart-73388_960_720.png') no-repeat center center;
+            background-size: contain;
+            animation: heartBeat 1.5s infinite ease-in-out;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* GIFs popping up and down */
+        .gif {
+            position: absolute;
+            width: 100px; /* Reduced size for mobile */
+            height: 100px; /* Reduced size for mobile */
+            animation: popUpDown 2s infinite ease-in-out;
+        }
+
+        @keyframes popUpDown {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Notification message style */
+        .notification {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            color: #222;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            max-width: 80%; /* Responsive max width */
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="romantic-mode-toggle" onclick="toggleRomanticMode()">Romantic Mode: Off</button>
+    <div class="notification" id="notification"></div>
+
+    <div class="lobby-container">
+        <h1>Welcome to the Game Lobby of Dev✨</h1>
+
+        <div class="game-container">
+            <h2>Game Lists</h2>
+            <a href="birdgamedev.html">
+                <img src="picsforgame/lovebirdlogo.jpg" alt="Love Bird Logo" class="game-logo" id="loveBirdLogo">
+            </a>
+            <p><strong>Love Bird</strong> - A fun and engaging game to enjoy! Stay tuned for updates.</p>
+        </div>
+
+        <div class="upcoming-games">
+            <h3>Upcoming Games</h3>
+            <p>🚀 More games coming soon! 🎮 If Dev (that’s me! 😆) finds the time, expect new adventures, epic battles, and mind-blowing levels! 🏆 From pixelated nostalgia 🕹️ to next-gen experiences 🔥, I’m crafting worlds where you are the hero! ⚔️ But hey, game dev isn’t easy! 😅 Between coding 💻, debugging 🐛, and life stuff 🏃, time is a tricky boss battle! 💀 No worries, though—passion fuels progress! 💡✨ Stay tuned, because when I hit "Run", magic happens! 🎩🎶 Until then… Keep gaming, keep dreaming! 🌟</p>
+        </div>
+
+        <div class="contact">
+            <p>Contact me via email: <a href="mailto:hellb5520@gmail.com">hellb5520@gmail.com</a></p>
+        </div>
+    </div>
+
+    <!-- AI Chat Section -->
+    <div class="chat-box">
+        <h4>Chat with Dev Bot</h4>
+        <div id="chat-messages"></div>
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Ask about the website...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="romanticmode/#Co2 Song by Prateek Kuhad🎹🎶🎵💽😊 #music #songs #videoediting #prateekkuhad [QQRfTY_AUJI].mp3" type="audio/mpeg">
+        <source src="romanticmode/Those Eyes- New West  #shorts.mp3" type="audio/mpeg">
+        <source src="romanticmode/Bollywood x Hollywood LOFI Mashups  Non-Stop JukeBox  MSM.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let romanticMode = false;
+        const songs = [
+            'romanticmode/#Co2 Song by Prateek Kuhad🎹🎶🎵💽😊 #music #songs #videoediting #prateekkuhad [QQRfTY_AUJI].mp3',
+            'romanticmode/Those Eyes- New West  #shorts.mp3',
+            'romanticmode/Bollywood x Hollywood LOFI Mashups  Non-Stop JukeBox  MSM.mp3'
+        ];
+
+        function toggleRomanticMode() {
+            romanticMode = !romanticMode;
+            const button = document.querySelector('.romantic-mode-toggle');
+            const notification = document.getElementById('notification');
+
+            if (romanticMode) {
+                button.innerText = "Romantic Mode: On";
+                document.body.style.backgroundColor = "#111"; // Dark background for romantic mode
+                playMusic();
+                createHeartsAndGIFs();
+                showNotification('Romantic Mode is On');
+            } else {
+                button.innerText = "Romantic Mode: Off";
+                document.body.style.backgroundColor = ""; // Reset background
+                stopMusic();
+                removeHeartsAndGIFs();
+                showNotification('Romantic Mode is Off');
+            }
+        }
+
+        function playMusic() {
+            const audio = document.getElementById('bg-music');
+            audio.play();
+        }
+
+        function stopMusic() {
+            const audio = document.getElementById('bg-music');
+            audio.pause();
+            audio.currentTime = 0; // Reset to the start
+        }
+
+        function createHeartsAndGIFs() {
+            // Create heart animations
+            for (let i = 0; i < 8; i++) { // Create 8 hearts
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.top = Math.random() * window.innerHeight + 'px';
+                document.body.appendChild(heart);
+            }
+
+            // Create GIF animations
+            const gifs = [
+                'romanticmode/1.gif',
+                'romanticmode/giphy2.gif',
+                'romanticmode/giphy3.gif',
+                'romanticmode/giphy4.gif',
+                'romanticmode/giphy5.gif',
+                'romanticmode/giphy6.gif'
+            ];
+
+            // Loop to show GIFs every 2 to 5 seconds
+            setInterval(() => {
+                const gif = document.createElement('img');
+                gif.src = gifs[Math.floor(Math.random() * gifs.length)];
+                gif.classList.add('gif');
+                gif.style.left = Math.random() * window.innerWidth + 'px';
+                gif.style.top = Math.random() * window.innerHeight + 'px';
+                gif.style.width = '70px'; // Adjusted size for mobile
+                gif.style.height = '70px'; // Adjusted size for mobile
+                document.body.appendChild(gif);
+
+                const randomTime = Math.floor(Math.random() * 3000) + 2000; // Random time between 2000 ms and 5000 ms
+                setTimeout(() => {
+                    gif.remove();
+                }, randomTime);
+            }, 2000); // New GIF every 2 seconds
+        }
+
+        // Add event listener for click to show heart emojis
+        document.addEventListener('click', (event) => {
+            const heartEmojis = ['❣️', '❤️‍🔥', '💖', '💘', '💟', '💌', '💗', '💓', '🩵', '💜', '🧡', '🩷'];
+            for (let i = 0; i < 5; i++) { // Show multiple heart emojis
+                const heartEmoji = document.createElement('div');
+                heartEmoji.innerText = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heartEmoji.style.position = 'absolute';
+                heartEmoji.style.fontSize = '24px';
+                heartEmoji.style.left = event.pageX + 'px';
+                heartEmoji.style.top = event.pageY + 'px';
+                heartEmoji.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+                document.body.appendChild(heartEmoji);
+
+                // Animate the heart emoji
+                setTimeout(() => {
+                    heartEmoji.style.transform = 'translateY(-50px)';
+                    heartEmoji.style.opacity = '0';
+                }, 10);
+
+                // Remove the heart emoji after the animation
+                setTimeout(() => {
+                    heartEmoji.remove();
+                }, 500); // Match to the animation duration 
+            }
+        });
+
+        function removeHeartsAndGIFs() {
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach(heart => heart.remove());
+
+            const gifs = document.querySelectorAll('.gif');
+            gifs.forEach(gif => gif.remove());
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000); // Show for 2 seconds
+        }
+
+        function sendMessage() {
+            let chatInput = document.getElementById("chat-input").value;
+            if (chatInput.trim() !== "") {
+                const userMessage = document.createElement("p");
+                userMessage.innerText = "You: " + chatInput;
+                document.getElementById("chat-messages").appendChild(userMessage);
+                document.getElementById("chat-input").value = "";
+
+                // AI Response
+                const response = getAIResponse(chatInput);
+                const responseDiv = document.createElement("p");
+                responseDiv.innerText = "Dev: " + response;
+                document.getElementById("chat-messages").appendChild(responseDiv);
+
+                // Scroll to the bottom of the chat messages
+                document.querySelector(".chat-box").scrollTop = document.querySelector(".chat-box").scrollHeight;
+            }
+        }
+
+        function getAIResponse(input) {
+            const lowercaseInput = input.toLowerCase();
+            if (lowercaseInput.includes("game") || lowercaseInput.includes("love bird")) {
+                return "The Love Bird game is currently in development. Stay tuned for more updates!";
+            } else if (lowercaseInput.includes("website")) {
+                return "This is my game lobby where you can find all my games and updates on future releases!";
+            } else if (lowercaseInput.includes("upload") || lowercaseInput.includes("games")) {
+                return "I plan to upload more games soon. Please check back regularly for updates!";
+            } else if (lowercaseInput.includes("hello") || lowercaseInput.includes("hi")) {
+                return "Hello! I'm Dev, your friendly AI assistant. How can I help you today?";
+            } else if (lowercaseInput.includes("what can you do") || lowercaseInput.includes("help")) {
+                return "I can provide information about this website and the upcoming games. Just ask!";
+            } else {
+                return "I'm not sure how to respond to that. Try asking about the games, website, or anything else!";
+            }
+        }
+    </script>
+</body>
+
+</html>

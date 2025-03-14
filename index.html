@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day, Month, Year</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff4081, #3f51b5);
+            color: #fff;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            transition: background 2s ease; /* Smooth transition for background change */
+        }
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px; /* Reduced padding for mobile */
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 90%; /* Set max-width to 90% for responsiveness */
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            color: #fff;
+            font-size: 2rem; /* Use rem for responsive font size */
+            margin-bottom: 20px; /* Reduced margin for mobile */
+            font-weight: bold;
+            font-family: 'Cursive', sans-serif;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        label {
+            font-size: 1.2rem; /* Use rem for responsive font size */
+            margin-bottom: 10px;
+            color: #ff80ab;
+        }
+        select, input[type="text"] {
+            width: 100%; /* Full width for mobile */
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ff80ab;
+            border-radius: 5px;
+            font-size: 1rem; /* Use rem for responsive font size */
+            outline: none;
+            background: #fff;
+            color: #ff4081;
+        }
+        input[type="submit"] {
+            background-color: #ff80ab;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem; /* Use rem for responsive font size */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            width: 100%; /* Full width for mobile */
+        }
+        input[type="submit"]:hover {
+            background-color: #ff4081;
+        }
+        .error-message,
+        .success-message {
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            font-size: 1rem; /* Use rem for responsive font size */
+            animation: heart-beat 1.5s ease infinite;
+        }
+        .error-message {
+            color: #ff4d9d;
+        }
+        .success-message {
+            color: #d81b60;
+        }
+        .popup-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: #ff4081;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem; /* Use rem for responsive font size */
+            display: none;
+            animation: popup-animation 3s ease-out;
+        }
+        /* Animation for GIFs */
+        .gif {
+            position: absolute;
+            width: 100px; /* Adjust size for mobile */
+            height: 100px; /* Adjust size for mobile */
+            bottom: 10%; /* Adjust positioning */
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        .gif-left {
+            left: 10%;
+            transform: translateY(50%);
+        }
+        .gif-right {
+            right: 10%;
+            transform: translateY(50%);
+        }
+        /* Media Queries for responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem; /* Smaller font size for smaller screens */
+            }
+            label, input[type="submit"], .error-message, .success-message, .popup-message {
+                font-size: 0.9rem; /* Smaller font size for smaller screens */
+            }
+            .gif {
+                width: 70px; /* Smaller size for mobile */
+                height: 70px; /* Smaller size for mobile */
+            }
+        }
+        /* Countdown styling */
+        .countdown {
+            font-size: 60px;
+            font-weight: bold;
+            color: #FF1493;
+            animation: countdown-animation 1s ease-in-out infinite;
+            display: none; /* Initially hidden */
+        }
+
+        @keyframes countdown-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Are You My Pyaaru? ❤️</h1>
+        <p>Please answer the following questions correctly to enter the secret pyaaru website:</p>
+
+        <label for="day">Day</label><br>
+        <select id="day">
+            <option value="">Select Day</option>
+            <script>
+                for (let i = 1; i <= 31; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.text = i;
+                    document.getElementById('day').appendChild(option);
+                }
+            </script>
+        </select><br>
+
+        <label for="month">Month</label><br>
+        <select id="month">
+            <option value="">Select Month</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+        </select><br>
+
+        <label for="year">Year</label><br>
+        <select id="year">
+            <option value="">Select Year</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+        </select><br>
+
+        <label for="nickname">What name did I use to call you before we became official?</label><br>
+        <input type="text" id="nickname" placeholder="Enter the nickname"><br>
+
+        <input type="submit" value="Enter" onclick="validateAnswers()">
+
+        <p class="error-message">Get the heck out of here and never come back! The FBI is coming for you!</p>
+        <p class="success-message">Welcome my cutie patotie puchulu! 💖</p>
+
+        <div id="countdown" class="countdown">3</div> <!-- Countdown -->
+
+    </div>
+
+    <div class="popup-message" id="popup-message"></div>
+
+    <!-- Error GIFs (Creepy) on the left and right -->
+    <img src="gifs/angrycat.gif" class="gif gif-left" id="errorGifLeft">
+    <img src="gifs/angrycat2.gif" class="gif gif-right" id="errorGifRight">
+
+    <!-- Success GIFs (Cute) on the left and right -->
+    <img src="gifs/cutecat.gif" class="gif gif-left" id="successGifLeft">
+    <img src="gifs/cutecat2.gif" class="gif gif-right" id="successGifRight">
+
+    <audio id="errorAudio" src="audio/FBI Open Up - Sound Effect (HD).mp3" preload="auto"></audio>
+    <audio id="successAudio" src="audio/mixkit-sweet-kitty-meow-93.mp3" preload="auto"></audio>
+
+    <script>
+        function validateAnswers() {
+            const correctDay = "23"; // Replace with your actual start day
+            const correctMonth = "March"; // Replace with your actual start month
+            const correctYear = "2024"; // Replace with your actual start year
+            const correctNickname = "kutumu"; // Replace with the nickname you used
+
+            const enteredDay = document.getElementById("day").value.trim();
+            const enteredMonth = document.getElementById("month").value.trim();
+            const enteredYear = document.getElementById("year").value.trim();
+            const enteredNickname = document.getElementById("nickname").value.trim();
+
+            const errorMessage = document.querySelector(".error-message");
+            const successMessage = document.querySelector(".success-message");
+            const popupMessage = document.getElementById("popup-message");
+
+            // Clear previous messages and GIFs
+            errorMessage.style.display = "none";
+            successMessage.style.display = "none";
+            popupMessage.style.display = "none";
+            document.getElementById("errorGifLeft").style.opacity = 0;
+            document.getElementById("errorGifRight").style.opacity = 0;
+            document.getElementById("successGifLeft").style.opacity = 0;
+            document.getElementById("successGifRight").style.opacity = 0;
+
+            if (enteredDay === correctDay && enteredMonth === correctMonth && enteredYear === correctYear && enteredNickname === correctNickname) {
+                successMessage.style.display = "block"; // Show success message
+                document.getElementById("successAudio").play(); // Play success audio
+                popupMessage.textContent = "Welcome my cutie patotie puchulu 💖"; // Show success popup
+                popupMessage.style.display = "block";
+
+                document.getElementById("successGifLeft").style.opacity = 1;
+                document.getElementById("successGifRight").style.opacity = 1;
+
+                // Countdown logic
+                let countdown = 3;
+                const countdownElement = document.getElementById("countdown");
+
+                const countdownInterval = setInterval(function() {
+                    countdownElement.textContent = countdown;
+                    countdown--;
+                    if (countdown < 0) {
+                        clearInterval(countdownInterval);
+                        window.location.href = 'home.html'; // Change this to the correct path for your index.html
+                    }
+                }, 1000); // Update countdown every second
+
+                // Change theme to love/cute
+                document.body.style.background = "linear-gradient(135deg, #FFB6C1, #FF1493)";
+                countdownElement.style.display = "block"; // Show the countdown when correct
+            } else {
+                errorMessage.style.display = "block"; // Show error message
+                document.getElementById("errorAudio").play(); // Play error audio
+                popupMessage.textContent = "Get the heck out of here and never come back! The FBI is coming for you!";
+                popupMessage.style.display = "block";
+                document.getElementById("errorGifLeft").style.opacity = 1;
+                document.getElementById("errorGifRight").style.opacity = 1;
+
+                // Change theme to dark horror
+                document.body.style.background = "linear-gradient(135deg, #000000, #333333)";
+                countdownElement.style.display = "none"; // Hide the countdown
+            }
+        }
+    </script>
+</body>
+</html>

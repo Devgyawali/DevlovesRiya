@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Bird</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #FFFFFF); /* Gradient background */
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars from appearing */
+        }
+        h1 {
+            margin: 10px;
+            font-size: 36px;
+            color: #ff4081; /* Title color */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow */
+        }
+        h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #ff4081; /* Subtitle color */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Text shadow */
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            border: 2px solid black;
+            width: 100%; /* Responsive width */
+            max-width: 400px; /* Max width for larger screens */
+            height: auto; /* Maintain aspect ratio */
+        }
+        .lightning {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            pointer-events: none; /* Prevent interaction with lightning */
+            transition: opacity 0.2s ease-out;
+        }
+        #scoreDisplay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: black;
+            z-index: 10; /* Ensure score is on top */
+        }
+        #highScoreDisplay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: black;
+            z-index: 10; /* Ensure high score is on top */
+        }
+        #heartsDisplay {
+            position: absolute;
+            top: 50px; /* Position below high score */
+            left: 10px; /* Position to the left */
+            font-size: 30px;
+            color: red;
+            z-index: 10; /* Ensure hearts are on top */
+        }
+        #gameOverMessage {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            z-index: 20; /* Ensure message is on top */
+        }
+        #startOverlay {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('picsforgame/start-background.jpg') no-repeat center center; /* Background image */
+            background-size: cover; /* Cover the entire overlay */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100; /* Ensure it covers the game canvas */
+        }
+        .start-button {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.6);
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 20, 147, 1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Love Bird</h1>
+    <h2>by Dev</h2>
+    <p>Press SPACE or tap the screen to fly!</p>
+    
+    <div id="startOverlay">
+        <h2>Wanna play the Love Bird?</h2>
+        <button class="start-button" id="start-button">Start Now!</button>
+    </div>
+
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+    <div class="lightning" id="lightningEffect"></div>
+    <div id="scoreDisplay">Score: 0</div>
+    <div id="highScoreDisplay">High Score: 0</div>
+    <div id="heartsDisplay">❤️❤️❤️</div>
+    <div id="gameOverMessage">
+        Game Over!<br>
+        <button onclick="restartGame()">Try Again</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const lightningEffect = document.getElementById("lightningEffect");
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const highScoreDisplay = document.getElementById("highScoreDisplay");
+        const gameOverMessage = document.getElementById("gameOverMessage");
+        const heartsDisplay = document.getElementById("heartsDisplay");
+        const startOverlay = document.getElementById("startOverlay");
+        const startButton = document.getElementById("start-button");
+        
+        // Load images
+        const bgImage = new Image();
+        bgImage.src = "picsforgame/birdgame.jpg"; // Background image URL
+
+        const birdImage = new Image();
+        birdImage.src = "picsforgame/devbird.jpg"; // Bird character image URL
+
+        // Load sounds
+        const bgm = new Audio("audioforgames/bgmbird.mp3"); // Background Music
+        const jumpSound = new Audio("audioforgames/birdjump.mp3"); // Jump Sound
+        const pipePassSound = new Audio("audioforgames/birdscore.mp3"); // Sound when passing a pipe
+        const deathSound = new Audio("audioforgames/birddie.mp3"); // Death Sound
+
+        let bird = { x: 50, y: 250, width: 40, height: 40, velocity: 0, gravity: 0.3, jump: -8 }; // Easier gameplay
+        let pipes = [];
+        let score = 0;
+        let highScore = 0; // Track the highest score
+        let lives = 3; // Number of hearts
+        let gameRunning = false; // Initially set to false
+        let backgroundX = 0;
+
+        function drawBird() {
+            ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
+        }
+
+        function createPipe() {
+            let gap = 200; // Increased gap between pipes
+            let pipeHeight = Math.random() * (canvas.height - gap - 100) + 50; // Adjusted for larger gap
+            pipes.push({ x: canvas.width, height: pipeHeight });
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = "green";
+            pipes.forEach(pipe => {
+                ctx.fillRect(pipe.x, 0, 50, pipe.height);
+                ctx.fillRect(pipe.x, pipe.height + 200, 50, canvas.height - pipe.height - 200); // Adjusted for larger gap
+            });
+        }
+
+        function updateGame() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Move background
+            backgroundX -= 1;
+            ctx.drawImage(bgImage, backgroundX, 0, canvas.width, canvas.height);
+            ctx.drawImage(bgImage, backgroundX + canvas.width, 0, canvas.width, canvas.height);
+            if (backgroundX <= -canvas.width) {
+                backgroundX = 0;
+            }
+
+            bird.velocity += bird.gravity;
+            bird.y += bird.velocity;
+
+            // Check for collisions with the ground or top
+            if (bird.y + bird.height > canvas.height || bird.y < 0) {
+                loseLife();
+            }
+
+            pipes.forEach((pipe, index) => {
+                pipe.x -= 3; // Speed of pipes
+
+                if (pipe.x + 50 < 0) {
+                    pipes.splice(index, 1);
+                    score++;
+                    pipePassSound.play();
+                }
+
+                if (
+                    bird.x < pipe.x + 50 &&
+                    bird.x + bird.width > pipe.x &&
+                    (bird.y < pipe.height || bird.y + bird.height > pipe.height + 200)
+                ) {
+                    loseLife();
+                }
+            });
+
+            drawBird();
+            drawPipes();
+
+            // Update score display
+            scoreDisplay.innerText = `Score: ${score}`;
+            highScoreDisplay.innerText = `High Score: ${highScore}`;
+            heartsDisplay.innerText = "❤️".repeat(lives); // Display hearts
+
+            requestAnimationFrame(updateGame);
+        }
+
+        function loseLife() {
+            lives--; // Decrease life
+            if (lives <= 0) {
+                endGame(); // End game if no lives left
+            } else {
+                bird.y = 250; // Reset bird position
+                bird.velocity = 0; // Reset velocity
+            }
+        }
+
+        function endGame() {
+            gameRunning = false;
+            deathSound.play();
+            gameOverMessage.style.display = 'block'; // Show game over message
+
+            // Update high score if applicable
+            if (score > highScore) {
+                highScore = score;
+            }
+        }
+
+        function triggerLightningEffect() {
+            lightningEffect.style.opacity = '1'; // Show the lightning effect
+            setTimeout(() => {
+                lightningEffect.style.opacity = '0'; // Hide the lightning effect after a short duration
+            }, 200);
+        }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.code === "Space" && gameRunning) {
+                bird.velocity = bird.jump;
+                jumpSound.play();
+                triggerLightningEffect(); // Trigger lightning effect on jump
+            }
+        });
+
+        // Adding touch event for mobile
+        canvas.addEventListener("touchstart", (event) => {
+            if (gameRunning) {
+                bird.velocity = bird.jump;
+                jumpSound.play();
+                triggerLightningEffect(); // Trigger lightning effect on jump
+            }
+            event.preventDefault(); // Prevent default touch behavior
+        });
+
+        function restartGame() {
+            bird.y = 250;
+            bird.velocity = 0;
+            pipes = [];
+            score = 0; // Reset score
+            lives = 3; // Reset lives
+            gameRunning = true;
+            gameOverMessage.style.display = 'none'; // Hide game over message
+            updateGame();
+        }
+
+        // Start the game when the Start button is clicked
+        startButton.addEventListener("click", function() {
+            bgm.loop = true; // Ensure music loops
+            bgm.play(); // Start background music
+            startOverlay.style.display = 'none'; // Hide the start overlay
+            gameRunning = true; // Set game running to true
+            updateGame(); // Start the game loop
+        });
+
+        setInterval(createPipe, 3000); // Increased interval for pipe creation
+    </script>
+</body>
+</html>
